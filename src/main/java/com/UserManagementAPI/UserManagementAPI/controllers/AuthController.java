@@ -22,27 +22,23 @@ public class AuthController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    // Normal login controller
     @PostMapping(value = "v1/userLogin")
     public ResponseEntity<Map<String, String>> login(@Valid @RequestBody UserDto user) {
+
         String response = userService.userLogin(user);
 
-
         Map<String, String> responseBody = new HashMap<>();
-//         responseBody.put("message","sls");
-//         return new ResponseEntity<>(responseBody, HttpStatus.OK);
 
         if (response.equals("Login successful !")) {
-            // Generate the JWT token
 
-            String token = jwtTokenUtil.generateToken(user.getEmail()); // Ensure you have a method to generate the token
+            String token = jwtTokenUtil.generateToken(user.getEmail());
 
             responseBody.put("message", response);
-            responseBody.put("token", token); // Include the token in the response
+            responseBody.put("token", token);
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         } else {
             responseBody.put("message", response);
-            return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED); // Return 401 for unauthorized access
+            return new ResponseEntity<>(responseBody, HttpStatus.UNAUTHORIZED);
         }
 
 }
