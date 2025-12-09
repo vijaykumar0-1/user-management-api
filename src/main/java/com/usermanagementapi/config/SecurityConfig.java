@@ -1,6 +1,7 @@
 package com.usermanagementapi.config;
 
 
+import com.usermanagementapi.controllers.JwtAuthenticationEntryPoint;
 import com.usermanagementapi.service.impl.CustomUserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +23,13 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
     private final CustomUserDetailsServiceImpl userDetailsService;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     public SecurityConfig(JwtRequestFilter jwtRequestFilter,
-                          CustomUserDetailsServiceImpl userDetailsService) {
+                          CustomUserDetailsServiceImpl userDetailsService, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
         this.jwtRequestFilter = jwtRequestFilter;
         this.userDetailsService = userDetailsService;
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
     }
 
     @Bean
@@ -41,6 +44,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
+
+        http.exceptionHandling(ex ->
+                ex.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+        );
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/auth/login", "/user/register").permitAll()
