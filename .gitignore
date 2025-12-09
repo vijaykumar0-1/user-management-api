@@ -34,6 +34,7 @@ out/
 
 ### VS Code ###
 .vscode/
+.DS_Store
 
 # Ignore application.yml
 /src/main/resources/application.yml
